@@ -79,17 +79,18 @@ class LyraCrypto {
 
   String lyraEncPub(List<int> pubKeyBytes) {
     var ret = lyraEnc(pubKeyBytes.sublist(1));
-    return "";
+    return 'L' + ret;
   }
 
   String prvToPub(String prvkey) {
-    var d = BigInt.parse(prvkey, radix: 16);
+    var prvHex = lyraDec(prvkey);
+    var d = BigInt.parse('+' + prvHex, radix: 16);
     var curve = ECCurve_secp256r1();
     var q = curve.G * d;
     var pubKey = ECPublicKey(q, curve);
     var pubKeyBytes = pubKey.Q.getEncoded(false);
 
-    return ""; // Base58() pubKeyBytes.sublist(1)
+    return lyraEncPub(pubKeyBytes);
   }
 
   void GenerateWallet() {

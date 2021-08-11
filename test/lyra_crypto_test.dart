@@ -15,6 +15,9 @@ void main() {
 
       var ret2 = lyraCrypto.isPrivateKeyValid(pvk);
       expect(ret2, true);
+
+      var pubx = lyraCrypto.prvToPub(pvk);
+      expect(pubx, pub);
     } catch (e) {
       print(e);
       fail("not verify account id properly: ");
