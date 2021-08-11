@@ -25,7 +25,7 @@ void main() {
 
       var msg = "hello, world!";
       var signtr = lyraCrypto.sign(msg, pvk);
-      print(signtr);
+      //print(signtr);
       expect(lyraCrypto.verify(msg, pub, signtr), true);
     } catch (e) {
       print(e);

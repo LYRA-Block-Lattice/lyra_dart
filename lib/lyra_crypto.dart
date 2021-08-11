@@ -66,15 +66,15 @@ class LyraCrypto {
     var data = buff.sublist(0, buff.length - 4);
     var crc = checksum(data);
     Function eq = const ListEquality().equals;
-    print("buff len: " + buff.length.toString());
-    print("crc len: " + crc.length.toString());
-    print(buff.sublist(buff.length - 4, buff.length).toString());
-    print(crc.toList());
+    //print("buff len: " + buff.length.toString());
+    //print("crc len: " + crc.length.toString());
+    //print(buff.sublist(buff.length - 4, buff.length).toString());
+    //print(crc.toList());
     if (eq(buff.sublist(buff.length - 4, buff.length), crc)) {
-      print("yes, equal");
+      //print("yes, equal");
       return hex.encode(data);
     } else {
-      print("no, not equal");
+      //print("no, not equal");
       throw ("Not valid lyra encode string");
     }
   }
@@ -142,19 +142,15 @@ class LyraCrypto {
 
   bool verify(String msg, String accountId, String signature) {
     var pubHex = lyraDecAccountId(accountId);
-    print("pubHex is " + pubHex);
     var curve = ECCurve_secp256r1();
     var q = curve.curve.decodePoint(hex.decode(pubHex));
-    print("before eccDomain");
 
     var eccDomain = ECDomainParameters('secp256r1');
     var pubParams = PublicKeyParameter(ECPublicKey(q, eccDomain));
 
-    print("before init.");
     var sig = ECDSASigner(SHA256Digest());
     sig.init(false, pubParams);
 
-    print("after init.");
     // decode P1393
     var lst = hex.decode(signature);
     var half = (lst.length / 2).toInt();
@@ -162,8 +158,8 @@ class LyraCrypto {
     var s = BigInt.parse('+' + hex.encode(lst.sublist(half, lst.length)),
         radix: 16);
 
-    print("r: " + r.toString());
-    print("s: " + s.toString());
+    //print("r: " + r.toString());
+    //print("s: " + s.toString());
     var ecsigntr = ECSignature(r, s);
     return sig.verifySignature(Uint8List.fromList(utf8.encode(msg)), ecsigntr);
   }
