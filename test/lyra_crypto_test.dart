@@ -22,6 +22,9 @@ void main() {
       var wallet = lyraCrypto.GenerateWallet();
       expect(lyraCrypto.isAccountIdValid(wallet[1]), true);
       expect(lyraCrypto.isPrivateKeyValid(wallet[0]), true);
+
+      var signtr = lyraCrypto.sign("hello, world!", pvk);
+      print(signtr);
     } catch (e) {
       print(e);
       fail("not verify account id properly: ");

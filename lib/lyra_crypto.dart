@@ -14,7 +14,24 @@ import 'package:pointycastle/export.dart';
 import 'package:pointycastle/pointycastle.dart';
 import 'package:pointycastle/signers/ecdsa_signer.dart';
 
-/// A Calculator.
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/src/impl/secure_random_base.dart';
+import 'package:pointycastle/src/registry/registry.dart';
+import 'package:pointycastle/src/ufixnum.dart';
+
+class NullSecureRandom extends SecureRandomBase {
+  static final FactoryConfig factoryConfig =
+      StaticFactoryConfig(SecureRandom, 'Null', () => NullSecureRandom());
+
+  var _nextValue = 0;
+  @override
+  String get algorithmName => 'Null';
+  @override
+  void seed(CipherParameters params) {}
+  @override
+  int nextUint8() => clip8(_nextValue++);
+}
+
 class LyraCrypto {
   bool isPrivateKeyValid(String privateKey) {
     try {
@@ -102,5 +119,22 @@ class LyraCrypto {
     var pvk = lyraEnc(pvkBytes);
     var pub = prvToPub(pvk);
     return [pvk, pub];
+  }
+
+  String sign(String msg, String prvkey) {
+    var prvHex = lyraDec(prvkey);
+    var d = BigInt.parse('+' + prvHex, radix: 16);
+
+    var eccDomain = ECDomainParameters('secp256r1');
+    var privParams = PrivateKeyParameter(ECPrivateKey(d, eccDomain));
+    var signParams = ParametersWithRandom(privParams, NullSecureRandom());
+
+    var curve = ECCurve_secp256r1();
+    var ecpvk = ECPrivateKey(d, curve);
+
+    var sig = ECDSASigner(SHA256Digest());
+    sig.init(true, signParams);
+    var signatur = sig.generateSignature(Uint8List.fromList(utf8.encode(msg)));
+    return signatur.toString();
   }
 }
