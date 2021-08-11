@@ -23,8 +23,10 @@ void main() {
       expect(lyraCrypto.isAccountIdValid(wallet[1]), true);
       expect(lyraCrypto.isPrivateKeyValid(wallet[0]), true);
 
-      var signtr = lyraCrypto.sign("hello, world!", pvk);
+      var msg = "hello, world!";
+      var signtr = lyraCrypto.sign(msg, pvk);
       print(signtr);
+      expect(lyraCrypto.verify(msg, pub, signtr), true);
     } catch (e) {
       print(e);
       fail("not verify account id properly: ");
