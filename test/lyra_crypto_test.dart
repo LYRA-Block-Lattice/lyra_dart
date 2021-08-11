@@ -18,6 +18,10 @@ void main() {
 
       var pubx = lyraCrypto.prvToPub(pvk);
       expect(pubx, pub);
+
+      var wallet = lyraCrypto.GenerateWallet();
+      expect(lyraCrypto.isAccountIdValid(wallet[1]), true);
+      expect(lyraCrypto.isPrivateKeyValid(wallet[0]), true);
     } catch (e) {
       print(e);
       fail("not verify account id properly: ");

@@ -3,13 +3,16 @@ library lyra;
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pascaldart/pascaldart.dart';
 import 'package:convert/convert.dart';
 import 'package:pointycastle/ecc/curves/secp256r1.dart';
+import 'package:pointycastle/export.dart';
 import 'package:pointycastle/pointycastle.dart';
+import 'package:pointycastle/signers/ecdsa_signer.dart';
 
 /// A Calculator.
 class LyraCrypto {
@@ -93,9 +96,11 @@ class LyraCrypto {
     return lyraEncPub(pubKeyBytes);
   }
 
-  void GenerateWallet() {
-/*    final algo = Sha256();
-    final ec = Ecdsa.p256(algo);
-    var kp = await ec.newKeyPair(); */
+  List<String> GenerateWallet() {
+    final rnd = Random.secure();
+    var pvkBytes = List<int>.generate(32, (i) => rnd.nextInt(256));
+    var pvk = lyraEnc(pvkBytes);
+    var pub = prvToPub(pvk);
+    return [pvk, pub];
   }
 }
