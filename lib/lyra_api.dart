@@ -8,47 +8,45 @@ import 'package:lyra/lyra_crypto.dart';
 
 /// A Calculator.
 class LyraAPI {
-  String? network;
+  String network;
   String? nodeAddress;
-  String? prvKey;
+  String prvKey;
   String? accountId;
   WebSocketChannel? ws;
 
+  //LyraAPI(this.network, this.prvKey);
   LyraAPI(this.network, this.prvKey, this.nodeAddress);
 
-  void init() async {
+  Future<void> init() async {
     // crypto
 
-    //if()
+    if (!LyraCrypto.isPrivateKeyValid(prvKey)) {
+      throw ("Not valid private key.");
+    }
+    accountId = LyraCrypto.prvToPub(prvKey);
+    nodeAddress ??= "wss://$network.lyra.live/api/v1/socket";
 
     // websocket
-    var socket = WebSocketChannel.connect(Uri.parse('ws://localhost:4321'));
-    var client = Client(socket.cast<String>());
+    var ws = WebSocketChannel.connect(Uri.parse(nodeAddress!));
+    var client = Peer(ws.cast<String>());
 
     // The client won't subscribe to the input stream until you call `listen`.
     // The returned Future won't complete until the connection is closed.
     unawaited(client.listen());
 
-    // This calls the "count" method on the server. A Future is returned that
-    // will complete to the value contained in the server's response.
-    var count = await client.sendRequest('count');
-    print('Count is $count');
+    client.registerMethod("Notify", (Parameters news) {
+      print("Got news from Lyra: " + news['catalog'].toString());
+    });
 
-    // Parameters are passed as a simple Map or, for positional parameters, an
-    // Iterable. Make sure they're JSON-serializable!
-    var echo = await client.sendRequest('echo', {'message': 'hello'});
-    print('Echo says "$echo"!');
+    client.registerMethod("Sign", (Parameters req) {
+      print("Signing " + req.toString());
+      var signature = LyraCrypto.sign(req["msg"].toString(), prvKey);
+      return signature;
+    });
 
-    // A notification is a way to call a method that tells the server that no
-    // result is expected. Its return type is `void`; even if it causes an
-    // error, you won't hear back.
-    client.sendNotification('count');
-
-    // If the server sends an error response, the returned Future will complete
-    // with an RpcException. You can catch this error and inspect its error
-    // code, message, and any data that the server sent along with it.
     try {
-      await client.sendRequest('divide', {'dividend': 2, 'divisor': 0});
+      var status = await client.sendRequest("Status", ["2.2.0.0", network]);
+      print(status.toString());
     } on RpcException catch (error) {
       print('RPC error ${error.code}: ${error.message}');
     }
