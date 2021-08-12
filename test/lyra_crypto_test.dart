@@ -8,25 +8,24 @@ void main() {
     String pub =
         "LUTkgGP9tb4iAFAFXv7i83N4GreEUakWbaDrUbUFnKHpPp46n9KF1QzCtvUwZRBCQz6yqerkWvvGXtCTkz4knzeKRmqid";
 
-    final lyraCrypto = LyraCrypto();
     try {
-      var ret = lyraCrypto.isAccountIdValid(pub);
+      var ret = LyraCrypto.isAccountIdValid(pub);
       expect(ret, true);
 
-      var ret2 = lyraCrypto.isPrivateKeyValid(pvk);
+      var ret2 = LyraCrypto.isPrivateKeyValid(pvk);
       expect(ret2, true);
 
-      var pubx = lyraCrypto.prvToPub(pvk);
+      var pubx = LyraCrypto.prvToPub(pvk);
       expect(pubx, pub);
 
-      var wallet = lyraCrypto.GenerateWallet();
-      expect(lyraCrypto.isAccountIdValid(wallet[1]), true);
-      expect(lyraCrypto.isPrivateKeyValid(wallet[0]), true);
+      var wallet = LyraCrypto.GenerateWallet();
+      expect(LyraCrypto.isAccountIdValid(wallet[1]), true);
+      expect(LyraCrypto.isPrivateKeyValid(wallet[0]), true);
 
       var msg = "hello, world!";
-      var signtr = lyraCrypto.sign(msg, pvk);
+      var signtr = LyraCrypto.sign(msg, pvk);
       //print(signtr);
-      expect(lyraCrypto.verify(msg, pub, signtr), true);
+      expect(LyraCrypto.verify(msg, pub, signtr), true);
     } catch (e) {
       print(e);
       fail("not verify account id properly: ");

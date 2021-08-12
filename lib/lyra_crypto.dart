@@ -33,7 +33,7 @@ class NullSecureRandom extends SecureRandomBase {
 }
 
 class LyraCrypto {
-  bool isPrivateKeyValid(String privateKey) {
+  static bool isPrivateKeyValid(String privateKey) {
     try {
       var decStr = lyraDec(privateKey);
       return true;
@@ -43,7 +43,7 @@ class LyraCrypto {
     }
   }
 
-  bool isAccountIdValid(String accountId) {
+  static bool isAccountIdValid(String accountId) {
     if (accountId.length < 10 || accountId.substring(0, 1) != 'L') return false;
     try {
       var decStr = lyraDecAccountId(accountId);
@@ -54,14 +54,14 @@ class LyraCrypto {
     }
   }
 
-  String lyraDecAccountId(String accountId) {
+  static String lyraDecAccountId(String accountId) {
     var pubKey = accountId.substring(1);
 
     var decStr = lyraDec(pubKey);
     return "04" + decStr;
   }
 
-  String lyraDec(String input) {
+  static String lyraDec(String input) {
     var buff = Base58.decode(input);
     var data = buff.sublist(0, buff.length - 4);
     var crc = checksum(data);
@@ -80,29 +80,29 @@ class LyraCrypto {
   }
 
   /// Encode with checksum
-  String lyraEnc(List<int> input) {
+  static String lyraEnc(List<int> input) {
     var crc = checksum(input);
     return Base58.encode(input + crc);
   }
 
-  List<int> sha256(List<int> input) {
+  static List<int> sha256(List<int> input) {
     final algo = Digest("SHA-256");
     final hash = algo.process(Uint8List.fromList(input));
     return hash;
   }
 
-  List<int> checksum(List<int> input) {
+  static List<int> checksum(List<int> input) {
     final h1 = sha256(input);
     var h2 = sha256(h1);
     return h2.sublist(0, 4);
   }
 
-  String lyraEncPub(List<int> pubKeyBytes) {
+  static String lyraEncPub(List<int> pubKeyBytes) {
     var ret = lyraEnc(pubKeyBytes.sublist(1));
     return 'L' + ret;
   }
 
-  String prvToPub(String prvkey) {
+  static String prvToPub(String prvkey) {
     var prvHex = lyraDec(prvkey);
     var d = BigInt.parse('+' + prvHex, radix: 16);
     var curve = ECCurve_secp256r1();
@@ -113,7 +113,7 @@ class LyraCrypto {
     return lyraEncPub(pubKeyBytes);
   }
 
-  List<String> GenerateWallet() {
+  static List<String> GenerateWallet() {
     final rnd = Random.secure();
     var pvkBytes = List<int>.generate(32, (i) => rnd.nextInt(256));
     var pvk = lyraEnc(pvkBytes);
@@ -121,7 +121,7 @@ class LyraCrypto {
     return [pvk, pub];
   }
 
-  String sign(String msg, String prvkey) {
+  static String sign(String msg, String prvkey) {
     var prvHex = lyraDec(prvkey);
     var d = BigInt.parse('+' + prvHex, radix: 16);
 
@@ -140,7 +140,7 @@ class LyraCrypto {
     return hex.encode(lst);
   }
 
-  bool verify(String msg, String accountId, String signature) {
+  static bool verify(String msg, String accountId, String signature) {
     var pubHex = lyraDecAccountId(accountId);
     var curve = ECCurve_secp256r1();
     var q = curve.curve.decodePoint(hex.decode(pubHex));

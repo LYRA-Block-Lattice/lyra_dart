@@ -13,6 +13,8 @@ dependencies:
   convert: ^3.0.1
   pascaldart: ^1.0.0
   pointycastle: ^1.0.2
+  json_rpc_2: ^3.0.1
+  web_socket_channel: ^2.1.0
 
 dev_dependencies:
   flutter_test:
