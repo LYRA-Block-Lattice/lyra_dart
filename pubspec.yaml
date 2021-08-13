@@ -1,6 +1,6 @@
 name: lyra
-description: Lyra blockchain library for Flutter package project.
-version: 0.0.2
+description: Lyra blockchain library for Flutter package project. Generate wallet, send coin/token, receive coin/token, monitor balance changes, etc.
+version: 0.0.3
 homepage: https://lyra.live/
 repository: https://github.com/LYRA-Block-Lattice/lyra_dart
 
@@ -14,8 +14,8 @@ dependencies:
   pedantic: ^1.11.1
   collection: ^1.15.0
   convert: ^3.0.1
-  pascaldart: ^1.0.0
-  pointycastle: ^1.0.2
+  fast_base58: ^0.2.0
+  pointycastle: ^3.3.0
   json_rpc_2: ^3.0.1
   web_socket_channel: ^2.1.0
 

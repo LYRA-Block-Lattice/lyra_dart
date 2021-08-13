@@ -9,7 +9,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:pascaldart/pascaldart.dart';
+import 'package:fast_base58/fast_base58.dart';
 import 'package:convert/convert.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:pointycastle/ecc/curves/secp256r1.dart';

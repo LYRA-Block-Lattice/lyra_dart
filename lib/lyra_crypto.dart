@@ -43,7 +43,7 @@ class LyraCrypto {
   }
 
   static String lyraDec(String input) {
-    var buff = Base58.decode(input);
+    var buff = Base58Decode(input);
     var data = buff.sublist(0, buff.length - 4);
     var crc = checksum(data);
     Function eq = const ListEquality().equals;
@@ -63,7 +63,7 @@ class LyraCrypto {
   /// Encode with checksum
   static String lyraEnc(List<int> input) {
     var crc = checksum(input);
-    return Base58.encode(input + crc);
+    return Base58Encode(input + crc);
   }
 
   static List<int> sha256(List<int> input) {
@@ -89,7 +89,7 @@ class LyraCrypto {
     var curve = ECCurve_secp256r1();
     var q = curve.G * d;
     var pubKey = ECPublicKey(q, curve);
-    var pubKeyBytes = pubKey.Q.getEncoded(false);
+    var pubKeyBytes = pubKey.Q!.getEncoded(false);
 
     return lyraEncPub(pubKeyBytes);
   }
@@ -118,7 +118,7 @@ class LyraCrypto {
     var rb = hex.decode(ecsgn.r.toRadixString(16));
     var sb = hex.decode(ecsgn.s.toRadixString(16));
     var lst = rb + sb;
-    return Base58.encode(lst);
+    return Base58Encode(lst);
   }
 
   static bool verify(String msg, String accountId, String signature) {
@@ -133,7 +133,7 @@ class LyraCrypto {
     sig.init(false, pubParams);
 
     // decode P1393
-    var lst = Base58.decode(signature);
+    var lst = Base58Decode(signature);
     var half = lst.length ~/ 2;
     var r = BigInt.parse('+' + hex.encode(lst.sublist(0, half)), radix: 16);
     var s = BigInt.parse('+' + hex.encode(lst.sublist(half, lst.length)),
