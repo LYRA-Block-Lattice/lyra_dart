@@ -2,6 +2,7 @@ name: lyra
 description: Lyra blockchain library for Flutter package project.
 version: 0.0.1
 homepage: https://lyra.live/
+repository: https://github.com/LYRA-Block-Lattice/lyra_dart
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
