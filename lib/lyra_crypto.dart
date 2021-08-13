@@ -94,7 +94,7 @@ class LyraCrypto {
     return lyraEncPub(pubKeyBytes);
   }
 
-  static List<String> GenerateWallet() {
+  static List<String> generateWallet() {
     final rnd = Random.secure();
     var pvkBytes = List<int>.generate(32, (i) => rnd.nextInt(256));
     var pvk = lyraEnc(pvkBytes);

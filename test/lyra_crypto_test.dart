@@ -18,7 +18,7 @@ void main() {
       var pubx = LyraCrypto.prvToPub(pvk);
       expect(pubx, pub);
 
-      var wallet = LyraCrypto.GenerateWallet();
+      var wallet = LyraCrypto.generateWallet();
       expect(LyraCrypto.isAccountIdValid(wallet[1]), true);
       expect(LyraCrypto.isPrivateKeyValid(wallet[0]), true);
 
