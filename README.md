@@ -1,6 +1,6 @@
 # lyra
 
-A new Flutter package project.
+Lyra blockchain library for Flutter package project.
 
 ## Getting Started
 

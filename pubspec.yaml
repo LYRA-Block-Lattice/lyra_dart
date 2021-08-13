@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  pedantic: ^1.11.1
+  collection: ^1.15.0
   convert: ^3.0.1
   pascaldart: ^1.0.0
   pointycastle: ^1.0.2
