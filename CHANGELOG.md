@@ -1,3 +1,7 @@
+## 0.0.4
+
+* added document to types
+  
 ## 0.0.3
 
 * upgrade dependency

@@ -6,6 +6,7 @@ void main(List<String> arguments) async {
   await testApi();
 }
 
+/// simple wallet operation test
 Future<void> testApi() async {
   const pvk = '2gbESTeBHsgt8um1aNN2dC9jajEDk3CoEupwmN6TRJQckyRbHa';
   //const pub = 'LUTkgGP9tb4iAFAFXv7i83N4GreEUakWbaDrUbUFnKHpPp46n9KF1QzCtvUwZRBCQz6yqerkWvvGXtCTkz4knzeKRmqid';

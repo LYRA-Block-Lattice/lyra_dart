@@ -1,5 +1,6 @@
 part of lyra;
 
+/// Help lib for pointycastle library
 class NullSecureRandom extends SecureRandomBase {
   static final FactoryConfig factoryConfig =
       StaticFactoryConfig(SecureRandom, 'Null', () => NullSecureRandom());
@@ -13,7 +14,9 @@ class NullSecureRandom extends SecureRandomBase {
   int nextUint8() => clip8(_nextValue++);
 }
 
+/// crypto routine for Lyra wallet/blockchain.
 class LyraCrypto {
+  /// check if private key is valid
   static bool isPrivateKeyValid(String privateKey) {
     try {
       lyraDec(privateKey);
@@ -24,6 +27,7 @@ class LyraCrypto {
     }
   }
 
+  /// check if account ID or wallet address is valid
   static bool isAccountIdValid(String accountId) {
     if (accountId.length < 10 || accountId.substring(0, 1) != 'L') return false;
     try {
@@ -35,6 +39,7 @@ class LyraCrypto {
     }
   }
 
+  /// decode account ID to hex encoding of ECDSA public key
   static String lyraDecAccountId(String accountId) {
     var pubKey = accountId.substring(1);
 
@@ -42,6 +47,7 @@ class LyraCrypto {
     return '04' + decStr;
   }
 
+  /// decode private key to hex encoding of ECDSA private key
   static String lyraDec(String input) {
     var buff = Base58Decode(input);
     var data = buff.sublist(0, buff.length - 4);
@@ -66,23 +72,27 @@ class LyraCrypto {
     return Base58Encode(input + crc);
   }
 
+  /// sha256 digest
   static List<int> sha256(List<int> input) {
     final algo = Digest('SHA-256');
     final hash = algo.process(Uint8List.fromList(input));
     return hash;
   }
 
+  /// crc checksum of byte array
   static List<int> checksum(List<int> input) {
     final h1 = sha256(input);
     var h2 = sha256(h1);
     return h2.sublist(0, 4);
   }
 
+  /// encode a Lyra account ID from ECDSA public key
   static String lyraEncPub(List<int> pubKeyBytes) {
     var ret = lyraEnc(pubKeyBytes.sublist(1));
     return 'L' + ret;
   }
 
+  /// get Account ID from a private key
   static String prvToPub(String prvkey) {
     var prvHex = lyraDec(prvkey);
     var d = BigInt.parse('+' + prvHex, radix: 16);
@@ -94,6 +104,7 @@ class LyraCrypto {
     return lyraEncPub(pubKeyBytes);
   }
 
+  /// generate a Lyra wallet, return key pair
   static List<String> generateWallet() {
     final rnd = Random.secure();
     var pvkBytes = List<int>.generate(32, (i) => rnd.nextInt(256));
@@ -102,6 +113,7 @@ class LyraCrypto {
     return [pvk, pub];
   }
 
+  /// sign a message with private key
   static String sign(String msg, String prvkey) {
     var prvHex = lyraDec(prvkey);
     var d = BigInt.parse('+' + prvHex, radix: 16);
@@ -121,6 +133,7 @@ class LyraCrypto {
     return Base58Encode(lst);
   }
 
+  /// verify a message by signature and account ID
   static bool verify(String msg, String accountId, String signature) {
     var pubHex = lyraDecAccountId(accountId);
     var curve = ECCurve_secp256r1();

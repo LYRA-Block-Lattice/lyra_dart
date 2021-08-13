@@ -1,6 +1,9 @@
 part of lyra;
 
-/// A Calculator.
+/// API to the Lyra blockchain.
+///
+/// Lyra provides standard JsonRPC api based on WebSocket from https://mainnet.lyra.live
+/// This API is a wrapper of Lyra JsonRPC API.
 class LyraAPI {
   String network;
   String? nodeAddress;
@@ -9,9 +12,12 @@ class LyraAPI {
   WebSocketChannel? ws;
   Peer? client;
 
-  //LyraAPI(this.network, this.prvKey);
+  /// [network] is 'mainnet', 'testnet', or 'devnet'
+  /// [prvKey] is private key.
+  /// provides null to [nodeAddress] to use the default url.
   LyraAPI(this.network, this.prvKey, this.nodeAddress);
 
+  /// connect to JsonRPC and get service status.
   Future<void> init() async {
     // crypto
 
@@ -54,6 +60,7 @@ class LyraAPI {
     }
   }
 
+  /// send token
   Future<dynamic> send(double amount, String destAddr, String token) async {
     if (client!.isClosed) {
       await init();
@@ -64,6 +71,7 @@ class LyraAPI {
     return balanceResp;
   }
 
+  /// receive token
   Future<dynamic> receive() async {
     if (client!.isClosed) {
       await init();
@@ -73,6 +81,7 @@ class LyraAPI {
     return balanceResp;
   }
 
+  /// get current balance
   Future<dynamic> balance() async {
     if (client!.isClosed) {
       await init();
@@ -82,6 +91,7 @@ class LyraAPI {
     return balanceResp;
   }
 
+  /// get transaction history
   Future<dynamic> history(
       DateTime startTimeUtc, DateTime endTimeUtc, int count) async {
     if (client!.isClosed) {
@@ -97,6 +107,7 @@ class LyraAPI {
     return histResult;
   }
 
+  /// close the API, remove private key
   void close() {
     if (client!.isClosed) {
       client!.close();

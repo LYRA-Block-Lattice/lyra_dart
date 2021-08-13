@@ -15,4 +15,4 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Run Test
 
->flutter test --no-sound-null-safety test/ 
+>flutter test test/ 
