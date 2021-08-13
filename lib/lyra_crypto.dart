@@ -1,23 +1,4 @@
-library lyra;
-
-import 'dart:collection';
-import 'dart:convert';
-import 'dart:typed_data';
-import 'dart:math';
-
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:pascaldart/pascaldart.dart';
-import 'package:convert/convert.dart';
-import 'package:pointycastle/ecc/curves/secp256r1.dart';
-import 'package:pointycastle/export.dart';
-import 'package:pointycastle/pointycastle.dart';
-import 'package:pointycastle/signers/ecdsa_signer.dart';
-
-import 'package:pointycastle/api.dart';
-import 'package:pointycastle/src/impl/secure_random_base.dart';
-import 'package:pointycastle/src/registry/registry.dart';
-import 'package:pointycastle/src/ufixnum.dart';
+part of lyra;
 
 class NullSecureRandom extends SecureRandomBase {
   static final FactoryConfig factoryConfig =
@@ -35,7 +16,7 @@ class NullSecureRandom extends SecureRandomBase {
 class LyraCrypto {
   static bool isPrivateKeyValid(String privateKey) {
     try {
-      var decStr = lyraDec(privateKey);
+      lyraDec(privateKey);
       return true;
     } catch (e) {
       print(e);
@@ -46,7 +27,7 @@ class LyraCrypto {
   static bool isAccountIdValid(String accountId) {
     if (accountId.length < 10 || accountId.substring(0, 1) != 'L') return false;
     try {
-      var decStr = lyraDecAccountId(accountId);
+      lyraDecAccountId(accountId);
       return true;
     } catch (e) {
       print(e);
@@ -58,7 +39,7 @@ class LyraCrypto {
     var pubKey = accountId.substring(1);
 
     var decStr = lyraDec(pubKey);
-    return "04" + decStr;
+    return '04' + decStr;
   }
 
   static String lyraDec(String input) {
@@ -75,7 +56,7 @@ class LyraCrypto {
       return hex.encode(data);
     } else {
       //print("no, not equal");
-      throw ("Not valid lyra encode string");
+      throw ('Not valid lyra encode string');
     }
   }
 
@@ -86,7 +67,7 @@ class LyraCrypto {
   }
 
   static List<int> sha256(List<int> input) {
-    final algo = Digest("SHA-256");
+    final algo = Digest('SHA-256');
     final hash = algo.process(Uint8List.fromList(input));
     return hash;
   }
@@ -137,7 +118,7 @@ class LyraCrypto {
     var rb = hex.decode(ecsgn.r.toRadixString(16));
     var sb = hex.decode(ecsgn.s.toRadixString(16));
     var lst = rb + sb;
-    return hex.encode(lst);
+    return Base58.encode(lst);
   }
 
   static bool verify(String msg, String accountId, String signature) {
@@ -152,8 +133,8 @@ class LyraCrypto {
     sig.init(false, pubParams);
 
     // decode P1393
-    var lst = hex.decode(signature);
-    var half = (lst.length / 2).toInt();
+    var lst = Base58.decode(signature);
+    var half = lst.length ~/ 2;
     var r = BigInt.parse('+' + hex.encode(lst.sublist(0, half)), radix: 16);
     var s = BigInt.parse('+' + hex.encode(lst.sublist(half, lst.length)),
         radix: 16);
