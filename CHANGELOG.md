@@ -1,3 +1,7 @@
+## 0.0.5
+
+* clean dependency
+
 ## 0.0.4
 
 * added document to types

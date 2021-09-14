@@ -1,4 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
+import 'package:convert/convert.dart';
 
 import 'package:lyra/lyra.dart';
 
@@ -17,6 +18,11 @@ void main() {
 
       var pubx = LyraCrypto.prvToPub(pvk);
       expect(pubx, pub);
+
+      var prvKey = LyraCrypto.lyraDecToBytes(pvk);
+      var pubKey = LyraCrypto.privateKeyToPublicKey(prvKey);
+      var accountId2 = LyraCrypto.lyraEncPub(pubKey);
+      expect(accountId2, pub);
 
       var wallet = LyraCrypto.generateWallet();
       expect(LyraCrypto.isAccountIdValid(wallet[1]), true);

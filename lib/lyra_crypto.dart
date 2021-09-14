@@ -47,8 +47,8 @@ class LyraCrypto {
     return '04' + decStr;
   }
 
-  /// decode private key to hex encoding of ECDSA private key
-  static String lyraDec(String input) {
+  /// decode private key to byte array of ECDSA private key
+  static Uint8List lyraDecToBytes(String input) {
     var buff = Base58Decode(input);
     var data = buff.sublist(0, buff.length - 4);
     var crc = checksum(data);
@@ -59,11 +59,16 @@ class LyraCrypto {
     //print(crc.toList());
     if (eq(buff.sublist(buff.length - 4, buff.length), crc)) {
       //print("yes, equal");
-      return hex.encode(data);
+      return Uint8List.fromList(data);
     } else {
       //print("no, not equal");
       throw ('Not valid lyra encode string');
     }
+  }
+
+  /// decode private key to hex encoding of ECDSA private key
+  static String lyraDec(String input) {
+    return hex.encode(lyraDecToBytes(input));
   }
 
   /// Encode with checksum
@@ -102,6 +107,17 @@ class LyraCrypto {
     var pubKeyBytes = pubKey.Q!.getEncoded(false);
 
     return lyraEncPub(pubKeyBytes);
+  }
+
+  static Uint8List privateKeyToPublicKey(Uint8List prvkey) {
+    var prvHex = hex.encode(prvkey);
+    var d = BigInt.parse('+' + prvHex, radix: 16);
+    var curve = ECCurve_secp256r1();
+    var q = curve.G * d;
+    var pubKey = ECPublicKey(q, curve);
+    var pubKeyBytes = pubKey.Q!.getEncoded(false);
+
+    return pubKeyBytes;
   }
 
   /// generate a Lyra wallet, return key pair
