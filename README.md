@@ -1,6 +1,6 @@
 # lyra
 
-Lyra blockchain library for Flutter package project.
+Lyra blockchain library for Flutter package project. [Link](https://pub.dev/packages/lyra)
 
 ## Getting Started
 
