@@ -111,6 +111,10 @@ class LyraCrypto {
 
   static Uint8List privateKeyToPublicKey(Uint8List prvkey) {
     var prvHex = hex.encode(prvkey);
+    return privateKeyHexToPublicKey(prvHex);
+  }
+
+  static Uint8List privateKeyHexToPublicKey(String prvHex) {
     var d = BigInt.parse('+' + prvHex, radix: 16);
     var curve = ECCurve_secp256r1();
     var q = curve.G * d;
