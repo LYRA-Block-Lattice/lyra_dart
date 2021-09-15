@@ -1,3 +1,6 @@
+## 0.0.7
+
+* added a new function: privateKeyIntToPublicKey
 ## 0.0.6
 
 * added a new function: privateKeyHexToPublicKey
