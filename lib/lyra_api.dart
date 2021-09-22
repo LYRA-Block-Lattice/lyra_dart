@@ -53,7 +53,7 @@ class LyraAPI {
     });
 
     try {
-      var status = await client!.sendRequest('Status', ['2.2.0.0', network]);
+      var status = await client!.sendRequest('Status', ['2.3.0.0', network]);
       print(status.toString());
     } on RpcException catch (error) {
       print('RPC error ${error.code}: ${error.message}');

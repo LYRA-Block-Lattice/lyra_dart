@@ -12,6 +12,7 @@ void main() {
 
     var balance = await api.balance();
     print(balance);
+    print('LYR: $balance["balance"]["LYR"]');
     expect(balance, isNotNull);
 
     if (balance['unreceived']) {
