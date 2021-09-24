@@ -8,9 +8,10 @@ import 'package:lyra/lyra.dart';
 void main() {
   test('ddd', () {
     var hex =
-        '3249c9f5976518da19a67048552603e8cf8e54c7b2ee520489656e164134d06d';
+        'eef3cf45d7d3dd729482ad7434c75b891ba2214bbef90e362546fcaefdbadc3e';
     var pub =
-        'LUaFA7PZsTPkb6TBfinHYaoGXbecPnLDKtV7vVnkyujnJQgoJytAdfcAH7W3SQETJ4VGKGDxNzNnjNX49WqEH8nPQZ7fA6';
+        'LPukVyhKk16SYrnEuHfb2WGArHV3XvYtAxu6tuYH1nmHCRidLHFsxk2ZgcyN4gDF3ExFNy6hTQFa9mj6enesvAT1d5dABc';
+    expect(LyraCrypto.isAccountIdValid(pub), true);
     var pubKey = LyraCrypto.privateKeyHexToPublicKey(hex);
     var accountId = LyraCrypto.lyraEncPub(pubKey);
     print('converted:');
